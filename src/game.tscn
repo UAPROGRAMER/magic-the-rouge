@@ -1,0 +1,217 @@
+[gd_scene load_steps=17 format=3 uid="uid://bxrw0muuuy8cp"]
+
+[ext_resource type="TileSet" uid="uid://b3b88836ckld5" path="res://data/tileset/tileset.tres" id="1_7uq6d"]
+[ext_resource type="Script" uid="uid://c2u6ucnyo2kxp" path="res://src/game.gd" id="1_bs6l1"]
+[ext_resource type="Script" uid="uid://dobrvhy5m68p" path="res://src/generator.gd" id="2_pk08u"]
+[ext_resource type="Script" uid="uid://1o1fuow6ppbr" path="res://src/input_handler.gd" id="2_wqvko"]
+[ext_resource type="Script" uid="uid://cje6m3b2bd1io" path="res://src/map.gd" id="2_xq6wo"]
+[ext_resource type="Script" uid="uid://cs070mluy7kny" path="res://src/entities/entities.gd" id="6_pk08u"]
+[ext_resource type="Material" uid="uid://bcaf7l2l3mh6n" path="res://data/materials/fov_shader_material.tres" id="7_wqvko"]
+[ext_resource type="Script" uid="uid://doc30smji62wg" path="res://src/fov.gd" id="8_cdx1q"]
+[ext_resource type="Texture2D" uid="uid://c65ruyyq0lpe2" path="res://data/textures/ui_heart.tres" id="9_4bcji"]
+[ext_resource type="Script" uid="uid://cm1h4njfxe5uj" path="res://src/ui.gd" id="9_xdrfk"]
+[ext_resource type="Texture2D" uid="uid://b5yg0ancxn1pp" path="res://data/textures/ui_bottle.tres" id="10_uktfx"]
+[ext_resource type="Texture2D" uid="uid://caqkw2t1imhxe" path="res://data/textures/ui_menu_default.tres" id="11_y2hwx"]
+[ext_resource type="Texture2D" uid="uid://cjybkvxn6ciqa" path="res://data/textures/ui_menu_hover.tres" id="12_qiocs"]
+[ext_resource type="Texture2D" uid="uid://47vww73aouoi" path="res://data/textures/ui_coins.tres" id="12_tqu6b"]
+[ext_resource type="Texture2D" uid="uid://mu0vdisuby7t" path="res://data/textures/unhover_4.tres" id="16_ns0lu"]
+[ext_resource type="Texture2D" uid="uid://bs0oyicu8lgff" path="res://data/textures/hover_4.tres" id="17_ns0lu"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_bs6l1")
+
+[node name="InputHandler" type="Node" parent="."]
+script = ExtResource("2_wqvko")
+
+[node name="Generator" type="Node" parent="."]
+script = ExtResource("2_pk08u")
+
+[node name="BG" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="BGColor" type="ColorRect" parent="BG"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.278431, 0.176471, 0.235294, 1)
+
+[node name="Map" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_7uq6d")
+script = ExtResource("2_xq6wo")
+
+[node name="Entities" type="Node2D" parent="."]
+script = ExtResource("6_pk08u")
+
+[node name="Fov" type="TileMapLayer" parent="."]
+material = ExtResource("7_wqvko")
+tile_set = ExtResource("1_7uq6d")
+script = ExtResource("8_cdx1q")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("9_xdrfk")
+
+[node name="BottomUI" type="ColorRect" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.104479, 0.0550725, 0.0836203, 1)
+
+[node name="hp" type="Control" parent="UI/BottomUI"]
+modulate = Color(1, 0.361561, 0.349857, 1)
+anchors_preset = 0
+offset_left = 16.0
+offset_right = 80.0
+offset_bottom = 16.0
+
+[node name="hp_sprite" type="TextureRect" parent="UI/BottomUI/hp"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("9_4bcji")
+
+[node name="hp_label" type="Label" parent="UI/BottomUI/hp"]
+texture_filter = 2
+layout_mode = 0
+offset_left = 16.0
+offset_right = 64.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "100/100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="mana" type="Control" parent="UI/BottomUI"]
+visible = false
+modulate = Color(0.56, 0.875333, 1, 1)
+anchors_preset = 0
+offset_left = 96.0
+offset_right = 160.0
+offset_bottom = 16.0
+
+[node name="mana_sprite" type="TextureRect" parent="UI/BottomUI/mana"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("10_uktfx")
+
+[node name="mana_label" type="Label" parent="UI/BottomUI/mana"]
+texture_filter = 2
+layout_mode = 0
+offset_left = 16.0
+offset_right = 64.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "100/100"
+
+[node name="coins" type="Control" parent="UI/BottomUI"]
+modulate = Color(1, 0.7625, 0.25, 1)
+anchors_preset = 0
+offset_left = 96.0
+offset_right = 160.0
+offset_bottom = 16.0
+
+[node name="coins_sprite" type="TextureRect" parent="UI/BottomUI/coins"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("12_tqu6b")
+
+[node name="coins_label" type="Label" parent="UI/BottomUI/coins"]
+texture_filter = 2
+layout_mode = 0
+offset_left = 16.0
+offset_right = 64.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "9999"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="buttons" type="Control" parent="UI/BottomUI"]
+modulate = Color(0.82, 0.82, 0.82, 1)
+anchors_preset = 0
+offset_left = 432.0
+offset_right = 496.0
+offset_bottom = 16.0
+
+[node name="menu_button" type="TextureButton" parent="UI/BottomUI/buttons"]
+layout_mode = 0
+offset_left = 48.0
+offset_right = 64.0
+offset_bottom = 16.0
+texture_normal = ExtResource("11_y2hwx")
+texture_pressed = ExtResource("12_qiocs")
+texture_hover = ExtResource("12_qiocs")
+
+[node name="UIBG" type="ColorRect" parent="UI"]
+visible = false
+show_behind_parent = true
+offset_right = 496.0
+offset_bottom = 272.0
+color = Color(0.11, 0.0572, 0.08536, 0.317647)
+
+[node name="Menu" type="ColorRect" parent="UI"]
+visible = false
+offset_left = 224.0
+offset_top = 96.0
+offset_right = 288.0
+offset_bottom = 144.0
+color = Color(0.105882, 0.054902, 0.0823529, 1)
+
+[node name="menu_label" type="Label" parent="UI/Menu"]
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "Menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="resume_label" type="Label" parent="UI/Menu"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 64.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 11
+text = "Resume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="exit_label" type="Label" parent="UI/Menu"]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 64.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 11
+text = "Exit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="resume_button" type="TextureButton" parent="UI/Menu"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 64.0
+offset_bottom = 32.0
+texture_normal = ExtResource("16_ns0lu")
+texture_pressed = ExtResource("17_ns0lu")
+texture_hover = ExtResource("17_ns0lu")
+stretch_mode = 0
+
+[node name="exit_button" type="TextureButton" parent="UI/Menu"]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 64.0
+offset_bottom = 48.0
+texture_normal = ExtResource("16_ns0lu")
+texture_pressed = ExtResource("17_ns0lu")
+texture_hover = ExtResource("17_ns0lu")
+
+[connection signal="pressed" from="UI/BottomUI/buttons/menu_button" to="UI" method="_on_menu_button_pressed"]
+[connection signal="pressed" from="UI/Menu/resume_button" to="UI" method="_on_resume_button_pressed"]
+[connection signal="pressed" from="UI/Menu/exit_button" to="UI" method="_on_exit_button_pressed"]

@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dtbqreawwyd44"]
+
+[ext_resource type="Shader" uid="uid://l0kikd4iuv18" path="res://src/shaders/entity_shader.gdshader" id="1_k0fl1"]
+
+[resource]
+shader = ExtResource("1_k0fl1")
+shader_parameter/color_modifier = Vector4(1, 1, 1, 1)
