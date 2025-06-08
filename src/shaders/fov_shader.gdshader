@@ -5,5 +5,5 @@ const float tolerance = 0.01;
 
 void fragment() {
 	if (distance(COLOR, bg_color) > tolerance)
-		COLOR *= vec4(0.7, 0.7, 0.7, 1.0);
+		COLOR *= vec4(0.75, 0.75, 0.75, 1.0);
 }

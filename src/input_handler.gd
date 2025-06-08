@@ -2,12 +2,15 @@ extends Node
 
 class_name InputHandler
 
-var player: Entity
+@onready var game: Game = $".."
 
 var active: bool = true
+
+func get_player() -> Entity:
+	return game.player
 
 func _input(event: InputEvent) -> void:
 	if not active:
 		return
-	if player:
-		player.input(event)
+	if get_player():
+		get_player().input(event)

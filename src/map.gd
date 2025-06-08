@@ -14,7 +14,7 @@ func is_walkable(coords: Vector2i) -> bool:
 
 func is_seethrough(coords: Vector2i) -> bool:
 	var tile_data = get_ceil_tile_custom_data(coords, "seethrough")
-	return true if tile_data else false
+	return tile_data if tile_data else false
 
 # GENERATION
 

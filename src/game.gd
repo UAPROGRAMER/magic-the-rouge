@@ -12,6 +12,8 @@ signal turn_completed()
 
 var game_rng = RandomNumberGenerator.new()
 
+var player: Entity
+
 func _ready() -> void:
 	game_rng.randomize()
 	await get_tree().process_frame
@@ -20,7 +22,7 @@ func _ready() -> void:
 func start() -> void:
 	var map_generation_rng := RandomNumberGenerator.new()
 	map_generation_rng.seed = game_rng.randi()
-	generator.generate(map_generation_rng)
+	player = generator.generate(map_generation_rng)
 
 func end_game() -> void:
 	get_tree().quit()

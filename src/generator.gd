@@ -7,8 +7,8 @@ class_name Generator
 @onready var entities: Node2D = $"../Entities"
 @onready var input_handler: InputHandler = $"../InputHandler"
 
-func generate(rng: RandomNumberGenerator) -> void:
-	generate_grid_based_map(rng, Vector2i(3, 3), Vector2i(12, 12))
+func generate(rng: RandomNumberGenerator) -> Entity:
+	return generate_grid_based_map(rng, Vector2i(3, 3), Vector2i(12, 12))
 
 class Room:
 	var rect: Rect2i
@@ -49,7 +49,7 @@ func make_room(room: Room) -> void:
 	map.make_rect(room.rect, Vector2i(0, 1))
 	map.make_filled_rect(room.inside_rect(), Vector2i(1, 0))
 
-func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ceil_size: Vector2i) -> void:
+func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ceil_size: Vector2i) -> Entity:
 	map.clear()
 	
 	var rooms: Array[Room] = []
@@ -73,14 +73,14 @@ func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ce
 				var from := rooms[x + (y * grid_size.x)].exit(Room.ExitDirection.EAST)
 				var to := rooms[x + 1 + (y * grid_size.x)].exit(Room.ExitDirection.WEST)
 				map.make_corridor(from, to, true, Vector2i(1, 0))
-				map.make_tile(from, Vector2i(1, 2))
-				map.make_tile(to, Vector2i(1, 2))
+				map.make_tile(from, Vector2i(0, 2))
+				map.make_tile(to, Vector2i(0, 2))
 			if y + 1 < grid_size.y:
 				var from := rooms[x + (y * grid_size.x)].exit(Room.ExitDirection.SOUTH)
 				var to := rooms[x + ((y + 1) * grid_size.x)].exit(Room.ExitDirection.NORTH)
 				map.make_corridor(from, to, false, Vector2i(1, 0))
-				map.make_tile(from, Vector2i(1, 2))
-				map.make_tile(to, Vector2i(1, 2))
+				map.make_tile(from, Vector2i(0, 2))
+				map.make_tile(to, Vector2i(0, 2))
 	
 	var start_room_id: int = rng.randi_range(0, rooms.size() - 1)
 	var start_room: Room = rooms[start_room_id]
@@ -99,8 +99,6 @@ func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ce
 	camera.offset = Vector2(8, 8)
 	player.add_child(camera)
 	
-	input_handler.player = player
-	
 	var human_room_id: int = rng.randi_range(0, rooms.size() - 1)
 	var human_room: Room = rooms[human_room_id]
 	
@@ -111,3 +109,5 @@ func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ce
 		human_room.center()
 	)
 	entities.add_child(human)
+	
+	return player
