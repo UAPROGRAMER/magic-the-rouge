@@ -17,3 +17,13 @@ func get_entity_at(coords: Vector2i) -> Entity:
 func next_turn() -> void:
 	for child: Entity in get_children():
 		child.next_turn()
+
+func clean() -> void:
+	for child in get_children():
+		child.queue_free()
+
+func get_entities() -> Array[EntityResource]:
+	var entities: Array[EntityResource] = []
+	for child: Entity in get_children():
+		entities.push_back(child.to_resource())
+	return entities

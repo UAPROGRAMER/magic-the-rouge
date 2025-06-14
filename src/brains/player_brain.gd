@@ -11,9 +11,12 @@ func interact(delta: Vector2i) -> void:
 	if delta == Vector2i.ZERO:
 		pass
 	elif other != null:
-		other.attack(5, entity)
+		other.attack_entity(entity.attack, entity)
 	elif game.map.get_cell_atlas_coords(entity.coords + delta) == Vector2i(0, 2):
 		game.map.make_tile(entity.coords + delta, Vector2i(1, 2))
+	elif game.map.get_cell_atlas_coords(entity.coords + delta) == Vector2i(1, 3):
+		game.level += 1
+		game.make_level()
 	else:
 		move(delta)
 	game.next_turn()

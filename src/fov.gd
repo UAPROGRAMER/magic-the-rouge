@@ -11,8 +11,11 @@ const MAX_VISION_DISTANCE: int = 12
 
 var memory: Dictionary[Vector2i, Vector2i] = {}
 
-func update_fov(coords: Vector2i) -> void:
+func clean() -> void:
+	memory = {}
 	clear()
+
+func update_fov(coords: Vector2i) -> void:
 	clear_fov(coords)
 	for key: Vector2i in memory.keys():
 		set_cell(key, 0, memory[key])

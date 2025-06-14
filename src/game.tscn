@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bxrw0muuuy8cp"]
+[gd_scene load_steps=20 format=3 uid="uid://bxrw0muuuy8cp"]
 
 [ext_resource type="TileSet" uid="uid://b3b88836ckld5" path="res://data/tileset/tileset.tres" id="1_7uq6d"]
 [ext_resource type="Script" uid="uid://c2u6ucnyo2kxp" path="res://src/game.gd" id="1_bs6l1"]
@@ -14,6 +14,9 @@
 [ext_resource type="Texture2D" uid="uid://caqkw2t1imhxe" path="res://data/textures/ui_menu_default.tres" id="11_y2hwx"]
 [ext_resource type="Texture2D" uid="uid://cjybkvxn6ciqa" path="res://data/textures/ui_menu_hover.tres" id="12_qiocs"]
 [ext_resource type="Texture2D" uid="uid://47vww73aouoi" path="res://data/textures/ui_coins.tres" id="12_tqu6b"]
+[ext_resource type="Texture2D" uid="uid://b5f1vd553qtnu" path="res://data/textures/ui_sword.tres" id="13_tqu6b"]
+[ext_resource type="Texture2D" uid="uid://dwpf5uardumg8" path="res://data/textures/ui_shield.tres" id="14_b6dhc"]
+[ext_resource type="Texture2D" uid="uid://cfsww4hhu8hq7" path="res://data/textures/ui_exp.tres" id="15_b6dhc"]
 [ext_resource type="Texture2D" uid="uid://mu0vdisuby7t" path="res://data/textures/unhover_4.tres" id="16_ns0lu"]
 [ext_resource type="Texture2D" uid="uid://bs0oyicu8lgff" path="res://data/textures/hover_4.tres" id="17_ns0lu"]
 
@@ -131,6 +134,71 @@ text = "9999"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="skillpoints" type="Control" parent="UI/BottomUI"]
+visible = false
+modulate = Color(0.5766, 0.93, 0.86521, 1)
+anchors_preset = 0
+offset_left = 256.0
+offset_right = 336.0
+offset_bottom = 16.0
+
+[node name="damage_sprite" type="TextureRect" parent="UI/BottomUI/skillpoints"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("13_tqu6b")
+
+[node name="damage_label" type="Label" parent="UI/BottomUI/skillpoints"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 32.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "5"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="armor_sprite" type="TextureRect" parent="UI/BottomUI/skillpoints"]
+layout_mode = 0
+offset_left = 48.0
+offset_right = 64.0
+offset_bottom = 16.0
+texture = ExtResource("14_b6dhc")
+
+[node name="armor_label" type="Label" parent="UI/BottomUI/skillpoints"]
+layout_mode = 0
+offset_left = 64.0
+offset_right = 80.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="exp" type="Control" parent="UI/BottomUI"]
+visible = false
+modulate = Color(0.63, 0.784167, 1, 1)
+anchors_preset = 0
+offset_left = 176.0
+offset_right = 240.0
+offset_bottom = 16.0
+
+[node name="exp_sprite" type="TextureRect" parent="UI/BottomUI/exp"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("15_b6dhc")
+
+[node name="exp_label" type="Label" parent="UI/BottomUI/exp"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 64.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "0/100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="buttons" type="Control" parent="UI/BottomUI"]
 modulate = Color(0.82, 0.82, 0.82, 1)
 anchors_preset = 0
@@ -163,7 +231,6 @@ offset_bottom = 144.0
 color = Color(0.105882, 0.054902, 0.0823529, 1)
 
 [node name="menu_label" type="Label" parent="UI/Menu"]
-texture_filter = 1
 layout_mode = 0
 offset_right = 64.0
 offset_bottom = 16.0
@@ -173,7 +240,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="resume_label" type="Label" parent="UI/Menu"]
-texture_filter = 1
 layout_mode = 0
 offset_top = 16.0
 offset_right = 64.0
@@ -184,7 +250,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="exit_label" type="Label" parent="UI/Menu"]
-texture_filter = 1
 layout_mode = 0
 offset_top = 32.0
 offset_right = 64.0

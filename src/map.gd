@@ -16,6 +16,16 @@ func is_seethrough(coords: Vector2i) -> bool:
 	var tile_data = get_ceil_tile_custom_data(coords, "seethrough")
 	return tile_data if tile_data else false
 
+func get_map() -> Dictionary[Vector2i, Vector2i]:
+	var map_data: Dictionary[Vector2i, Vector2i] = {}
+	for tile in get_used_cells():
+		map_data[tile] = get_cell_atlas_coords(tile)
+	return map_data
+
+func load_map(map: Dictionary[Vector2i, Vector2i]) -> void:
+	for tile in map:
+		make_tile(tile, map[tile])
+
 # GENERATION
 
 func make_tile(coords: Vector2i, atlas_coords: Vector2i) -> void:

@@ -13,6 +13,12 @@ texture = ExtResource("1_3p6p8")
 1:2/0 = 0
 1:2/0/custom_data_0 = true
 1:2/0/custom_data_1 = true
+1:3/0 = 0
+1:3/0/custom_data_0 = true
+1:3/0/custom_data_1 = true
+0:3/0 = 0
+0:3/0/custom_data_0 = true
+0:3/0/custom_data_1 = true
 
 [resource]
 custom_data_layer_0/name = "walkable"

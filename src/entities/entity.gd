@@ -8,6 +8,7 @@ signal attacked(attack: int, attacker: Entity)
 var brain: Brain
 var max_health: int
 var health: int
+var money: int
 
 var attack_particles: AttackParticles
 
@@ -19,12 +20,15 @@ var coords: Vector2i:
 func _ready() -> void:
 	brain.ready()
 
-func _init(game: Game, entity_resource: EntityResource, coords: Vector2i) -> void:
+func _init(game: Game, entity_resource: EntityResource, coords: Vector2i = Vector2i(-1, -1)) -> void:
 	centered = false
 	texture = entity_resource.texture
-	self.coords = coords
+	
+	self.coords = coords if coords != Vector2i(-1, -1) else entity_resource.coords
+	
 	max_health = entity_resource.max_health
-	health = max_health
+	health = entity_resource.health
+	money = entity_resource.money
 	
 	material = ResourceLoader.load("res://data/materials/entity_shader_material.tres").duplicate(true)
 	
@@ -41,8 +45,8 @@ func input(event: InputEvent) -> void:
 func next_turn() -> void:
 	brain.next_turn()
 
-func attack(attack: int, attacker: Entity) -> void:
-	health -= attack
+func attack_entity(attack: int, attacker: Entity) -> void:
+	health -= max(0, attack)
 	attacked.emit(attack, attacker)
 	if health <= 0:
 		health_below_zero.emit()
@@ -52,3 +56,13 @@ func set_color_modifier(color: Vector4) -> void:
 
 func run_attack_particles() -> void:
 	attack_particles.activate()
+
+func to_resource() -> EntityResource:
+	var resource := EntityResource.new()
+	resource.texture = texture
+	resource.coords = coords
+	resource.brain = brain
+	resource.max_health = max_health
+	resource.health = health
+	resource.money = money
+	return resource

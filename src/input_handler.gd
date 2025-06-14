@@ -12,5 +12,5 @@ func get_player() -> Entity:
 func _input(event: InputEvent) -> void:
 	if not active:
 		return
-	if get_player():
+	elif get_player():
 		get_player().input(event)

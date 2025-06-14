@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EntityResource" load_steps=5 format=3 uid="uid://djg7oeqsv8fy2"]
+
+[ext_resource type="Script" uid="uid://c3ehgq7lumtl3" path="res://src/brains/player_brain.gd" id="1_bkqq8"]
+[ext_resource type="Script" uid="uid://ccsn0t5b4b244" path="res://src/entities/entity_resource.gd" id="2_3ywm7"]
+[ext_resource type="Texture2D" uid="uid://crndxadl3a8m8" path="res://data/textures/person.tres" id="3_4kg30"]
+
+[sub_resource type="Resource" id="Resource_bhtdr"]
+script = ExtResource("1_bkqq8")
+metadata/_custom_type_script = "uid://c3ehgq7lumtl3"
+
+[resource]
+script = ExtResource("2_3ywm7")
+texture = ExtResource("3_4kg30")
+coords = Vector2i(0, 0)
+brain = SubResource("Resource_bhtdr")
+max_health = 25
+health = 25
+money = 0
+metadata/_custom_type_script = "uid://ccsn0t5b4b244"

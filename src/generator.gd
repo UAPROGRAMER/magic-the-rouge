@@ -7,12 +7,32 @@ class_name Generator
 @onready var entities: Node2D = $"../Entities"
 @onready var input_handler: InputHandler = $"../InputHandler"
 
-func generate(rng: RandomNumberGenerator) -> Entity:
-	return generate_grid_based_map(rng, Vector2i(3, 3), Vector2i(12, 12))
+var generator_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var rooms: Array[Room] = []
+var start_room: Room
+var end_room: Room
+
+func _ready() -> void:
+	generator_rng.seed = game.get_random_seed()
+
+func generate() -> void:
+	generator_rng.state = game.level * 1024
+	generate_grid_based_map(generator_rng, Vector2i(3, 3), Vector2i(12, 12))
+	spawn_player()
+
+func spawn_player() -> void:
+	game.player = Entity.new(game, game.player_resource, start_room.center())
+	entities.add_child(game.player)
+	var camera := Camera2D.new()
+	camera.position += Vector2(8, 8)
+	game.player.add_child(camera)
+
+func spawn_enemies(seed: int) -> void:
+	pass
 
 class Room:
 	var rect: Rect2i
-	var rng_value: float
+	var room_rng: RandomNumberGenerator
 	enum ExitDirection {
 		NORTH,
 		SOUTH,
@@ -20,9 +40,10 @@ class Room:
 		EAST
 	}
 	
-	func _init(rect: Rect2i, rng: RandomNumberGenerator) -> void:
+	func _init(rect: Rect2i, seed: int) -> void:
 		self.rect = rect
-		self.rng_value = rng.randf_range(-1.0, 1.0)
+		self.room_rng = RandomNumberGenerator.new()
+		self.room_rng.seed = seed
 	
 	func inside_rect() -> Rect2i:
 		return Rect2i(rect.position + Vector2i(1, 1), rect.size - Vector2i(2, 2))
@@ -30,26 +51,27 @@ class Room:
 	func center() -> Vector2i:
 		return rect.position + rect.size / 2
 	
-	func rng_value_y() -> float:
-		return -1 if rng_value < 0 else 1 * (1 - abs(rng_value))
-	
 	func exit(direction: ExitDirection) -> Vector2i:
 		match direction:
 			ExitDirection.NORTH:
-				return Vector2i(center().x + round(rng_value), rect.position.y)
+				return Vector2i(center().x + room_rng.randi_range(-1, 1),
+				rect.position.y)
 			ExitDirection.SOUTH:
-				return Vector2i(center().x - round(rng_value), rect.position.y + rect.size.y - 1)
+				return Vector2i(center().x + room_rng.randi_range(-1, 1),
+				rect.position.y + rect.size.y - 1)
 			ExitDirection.WEST:
-				return Vector2i(rect.position.x, center().y + round(rng_value_y()))
+				return Vector2i(rect.position.x,
+				center().y + room_rng.randi_range(-1, 1))
 			ExitDirection.EAST:
-				return Vector2i(rect.position.x + rect.size.x - 1, center().y - round(rng_value_y()))
+				return Vector2i(rect.position.x + rect.size.x - 1,
+				center().y + room_rng.randi_range(-1, 1))
 		return Vector2i.ZERO
 
 func make_room(room: Room) -> void:
 	map.make_rect(room.rect, Vector2i(0, 1))
 	map.make_filled_rect(room.inside_rect(), Vector2i(1, 0))
 
-func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ceil_size: Vector2i) -> Entity:
+func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ceil_size: Vector2i) -> void:
 	map.clear()
 	
 	var rooms: Array[Room] = []
@@ -61,7 +83,7 @@ func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ce
 				ceil_size * Vector2i(x, y) + Vector2i(1, 1),
 				ceil_size * Vector2i(x + 1, y + 1) - Vector2i(1, 1) - room_size
 			)
-			var new_room := Room.new(Rect2i(room_pos, room_size), rng)
+			var new_room := Room.new(Rect2i(room_pos, room_size), rng.randi())
 			rooms.append(new_room)
 	
 	for room in rooms:
@@ -83,31 +105,12 @@ func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ce
 				map.make_tile(to, Vector2i(0, 2))
 	
 	var start_room_id: int = rng.randi_range(0, rooms.size() - 1)
-	var start_room: Room = rooms[start_room_id]
+	start_room = rooms[start_room_id]
 	rooms.remove_at(start_room_id)
 	
-	var player_resource: EntityResource = ResourceLoader.load("res://data/entity_resources/human.tres").duplicate(true)
-	player_resource.brain = PlayerBrain.new()
-	var player: Entity = Entity.new(
-		game,
-		player_resource,
-		start_room.center()
-	)
-	entities.add_child(player)
+	var end_room_id: int = rng.randi_range(0, rooms.size() - 1)
+	end_room = rooms[end_room_id]
+	rooms.remove_at(end_room_id)
 	
-	var camera := Camera2D.new()
-	camera.offset = Vector2(8, 8)
-	player.add_child(camera)
-	
-	var human_room_id: int = rng.randi_range(0, rooms.size() - 1)
-	var human_room: Room = rooms[human_room_id]
-	
-	var human_resource: EntityResource = ResourceLoader.load("res://data/entity_resources/human.tres").duplicate(true)
-	var human: Entity = Entity.new(
-		game,
-		human_resource,
-		human_room.center()
-	)
-	entities.add_child(human)
-	
-	return player
+	map.make_tile(start_room.center(), Vector2i(0, 3))
+	map.make_tile(end_room.center(), Vector2i(1, 3))
