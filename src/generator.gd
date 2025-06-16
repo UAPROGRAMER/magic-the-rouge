@@ -12,13 +12,13 @@ var rooms: Array[Room] = []
 var start_room: Room
 var end_room: Room
 
-func _ready() -> void:
-	generator_rng.seed = game.get_random_seed()
-
 func generate() -> void:
-	generator_rng.state = game.level * 1024
 	generate_grid_based_map(generator_rng, Vector2i(3, 3), Vector2i(12, 12))
+	game.pathfinder.region = Rect2i(0, 0, 36, 36)
+	game.pathfinder.update()
+	game.update_pathfinder()
 	spawn_player()
+	spawn_enemies(generator_rng.randi())
 
 func spawn_player() -> void:
 	game.player = Entity.new(game, game.player_resource, start_room.center())
@@ -28,7 +28,13 @@ func spawn_player() -> void:
 	game.player.add_child(camera)
 
 func spawn_enemies(seed: int) -> void:
-	pass
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = seed
+	rng.state = 0
+	var entity_resource: EntityResource = ResourceLoader.load("res://data/entity_resources/goblin.tres")
+	for room in rooms:
+		var new_enemy := Entity.new(game, entity_resource.duplicate(true), room.center())
+		entities.add_child(new_enemy)
 
 class Room:
 	var rect: Rect2i
@@ -73,8 +79,8 @@ func make_room(room: Room) -> void:
 
 func generate_grid_based_map(rng: RandomNumberGenerator, grid_size: Vector2i, ceil_size: Vector2i) -> void:
 	map.clear()
+	rooms = []
 	
-	var rooms: Array[Room] = []
 	for y in range(grid_size.y):
 		for x in range(grid_size.x):
 			var room_size := Utility.random_vector(rng, Vector2i(6, 6), ceil_size - Vector2i(3, 3))

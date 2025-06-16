@@ -10,11 +10,11 @@ func get_ceil_tile_custom_data(coords: Vector2i, layer_name: String) -> Variant:
 
 func is_walkable(coords: Vector2i) -> bool:
 	var tile_data = get_ceil_tile_custom_data(coords, "walkable")
-	return true if tile_data else false
+	return tile_data if tile_data != null else false
 
 func is_seethrough(coords: Vector2i) -> bool:
 	var tile_data = get_ceil_tile_custom_data(coords, "seethrough")
-	return tile_data if tile_data else false
+	return tile_data if tile_data != null else false
 
 func get_map() -> Dictionary[Vector2i, Vector2i]:
 	var map_data: Dictionary[Vector2i, Vector2i] = {}

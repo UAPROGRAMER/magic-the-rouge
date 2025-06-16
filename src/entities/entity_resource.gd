@@ -8,3 +8,4 @@ class_name EntityResource
 @export var max_health: int
 @export var health: int
 @export var money: int
+@export var attack: int

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bxrw0muuuy8cp"]
+[gd_scene load_steps=21 format=3 uid="uid://bxrw0muuuy8cp"]
 
 [ext_resource type="TileSet" uid="uid://b3b88836ckld5" path="res://data/tileset/tileset.tres" id="1_7uq6d"]
 [ext_resource type="Script" uid="uid://c2u6ucnyo2kxp" path="res://src/game.gd" id="1_bs6l1"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://caqkw2t1imhxe" path="res://data/textures/ui_menu_default.tres" id="11_y2hwx"]
 [ext_resource type="Texture2D" uid="uid://cjybkvxn6ciqa" path="res://data/textures/ui_menu_hover.tres" id="12_qiocs"]
 [ext_resource type="Texture2D" uid="uid://47vww73aouoi" path="res://data/textures/ui_coins.tres" id="12_tqu6b"]
+[ext_resource type="Texture2D" uid="uid://ba7efdstc5fku" path="res://data/textures/ui_stairs.tres" id="13_lslma"]
 [ext_resource type="Texture2D" uid="uid://b5f1vd553qtnu" path="res://data/textures/ui_sword.tres" id="13_tqu6b"]
 [ext_resource type="Texture2D" uid="uid://dwpf5uardumg8" path="res://data/textures/ui_shield.tres" id="14_b6dhc"]
 [ext_resource type="Texture2D" uid="uid://cfsww4hhu8hq7" path="res://data/textures/ui_exp.tres" id="15_b6dhc"]
@@ -131,6 +132,28 @@ offset_right = 64.0
 offset_bottom = 16.0
 theme_override_font_sizes/font_size = 11
 text = "9999"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="stats" type="Control" parent="UI/BottomUI"]
+modulate = Color(0.5292, 0.53956, 0.84, 1)
+anchors_preset = 0
+offset_left = 176.0
+offset_right = 208.0
+offset_bottom = 16.0
+
+[node name="level_sprite" type="TextureRect" parent="UI/BottomUI/stats"]
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("13_lslma")
+
+[node name="level_label" type="Label" parent="UI/BottomUI/stats"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 32.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -278,6 +301,78 @@ texture_normal = ExtResource("16_ns0lu")
 texture_pressed = ExtResource("17_ns0lu")
 texture_hover = ExtResource("17_ns0lu")
 
+[node name="GameOver" type="ColorRect" parent="UI"]
+visible = false
+offset_left = 208.0
+offset_top = 80.0
+offset_right = 304.0
+offset_bottom = 144.0
+color = Color(0.105882, 0.054902, 0.0823529, 1)
+
+[node name="game_over_label" type="Label" parent="UI/GameOver"]
+layout_mode = 0
+offset_right = 96.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 11
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="score_label" type="Label" parent="UI/GameOver"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 96.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 11
+text = "Score: 99999"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="restart_label" type="Label" parent="UI/GameOver"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 32.0
+offset_right = 80.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 11
+text = "Restart"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="exit_label" type="Label" parent="UI/GameOver"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 80.0
+offset_bottom = 64.0
+theme_override_font_sizes/font_size = 11
+text = "Exit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="restart_button" type="TextureButton" parent="UI/GameOver"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 32.0
+offset_right = 80.0
+offset_bottom = 48.0
+texture_normal = ExtResource("16_ns0lu")
+texture_pressed = ExtResource("17_ns0lu")
+texture_hover = ExtResource("17_ns0lu")
+stretch_mode = 0
+
+[node name="exit_button" type="TextureButton" parent="UI/GameOver"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 80.0
+offset_bottom = 64.0
+texture_normal = ExtResource("16_ns0lu")
+texture_pressed = ExtResource("17_ns0lu")
+texture_hover = ExtResource("17_ns0lu")
+
 [connection signal="pressed" from="UI/BottomUI/buttons/menu_button" to="UI" method="_on_menu_button_pressed"]
 [connection signal="pressed" from="UI/Menu/resume_button" to="UI" method="_on_resume_button_pressed"]
 [connection signal="pressed" from="UI/Menu/exit_button" to="UI" method="_on_exit_button_pressed"]
+[connection signal="pressed" from="UI/GameOver/restart_button" to="UI" method="_on_restart_button_pressed"]
+[connection signal="pressed" from="UI/GameOver/exit_button" to="UI" method="_on_exit_button_pressed"]

@@ -9,6 +9,7 @@ var brain: Brain
 var max_health: int
 var health: int
 var money: int
+var attack: int
 
 var attack_particles: AttackParticles
 
@@ -29,6 +30,7 @@ func _init(game: Game, entity_resource: EntityResource, coords: Vector2i = Vecto
 	max_health = entity_resource.max_health
 	health = entity_resource.health
 	money = entity_resource.money
+	attack = entity_resource.attack
 	
 	material = ResourceLoader.load("res://data/materials/entity_shader_material.tres").duplicate(true)
 	
@@ -65,4 +67,5 @@ func to_resource() -> EntityResource:
 	resource.max_health = max_health
 	resource.health = health
 	resource.money = money
+	resource.attack = attack
 	return resource

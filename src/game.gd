@@ -18,6 +18,8 @@ var player_resource: EntityResource
 var level: int = 1
 var level_data: Dictionary[int, LevelData] = {}
 
+var pathfinder: AStarGrid2D = AStarGrid2D.new()
+
 class LevelData:
 	var memory: Dictionary[Vector2i, Vector2i]
 	var map: Dictionary[Vector2i, Vector2i]
@@ -30,26 +32,27 @@ class LevelData:
 		self.entities = entities
 
 func _ready() -> void:
-	#game_rng.randomize()
-	game_rng.seed = 0
-	game_rng.state = 0
+	pathfinder.cell_size = Vector2i(16, 16)
+	pathfinder.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
 	await get_tree().process_frame
 	start()
 
 func start() -> void:
+	game_rng.seed = OS.get_executable_path().hash() + Time.get_ticks_usec() + Time.get_unix_time_from_system() * pow(PI, PI) * 1000
+	generator.generator_rng.seed = get_random_seed()
 	player_resource = ResourceLoader.load("res://data/entity_resources/player.tres").duplicate(true)
-	generator.generate()
+	make_level()
+	$UI/BottomUI/stats/level_label.text = str(level)
 
 func make_level() -> void:
-	player_resource = player.to_resource()
-	player.queue_free()
+	if player:
+		player_resource = player.to_resource()
+		player.queue_free()
 	entities.clean()
 	fov.clean()
 	map.clear()
 	generator.generate()
-
-func end_game() -> void:
-	get_tree().quit()
+	$UI/BottomUI/stats/level_label.text = str(level)
 
 func next_turn() -> void:
 	entities.next_turn()
@@ -57,3 +60,14 @@ func next_turn() -> void:
 
 func get_random_seed() -> int:
 	return game_rng.randi()
+
+func game_over() -> void:
+	ui.game_over(player.money + level * 10)
+
+func update_pathfinder() -> void:
+	for y in range(pathfinder.size.y):
+		for x in range(pathfinder.size.x):
+			pathfinder.set_point_solid(Vector2i(x, y), true)
+	for cell in map.get_used_cells():
+		if map.is_walkable(cell):
+			pathfinder.set_point_solid(cell, false)

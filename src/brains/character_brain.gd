@@ -2,14 +2,15 @@ extends Brain
 
 class_name CharacterBrain
 
-func _init(game: Game = null) -> void:
-	if game:
-		game.connect("turn_completed", on_turn_completed)
+var game_setup := false
 
 func setup(game: Game, entity: Entity) -> void:
 	super.setup(game, entity)
 	entity.connect("health_below_zero", on_health_below_zero)
 	entity.connect("attacked", on_attacked)
+	if not game_setup:
+		game.connect("turn_completed", on_turn_completed)
+		game_setup = true
 
 func on_health_below_zero() -> void:
 	entity.queue_free()

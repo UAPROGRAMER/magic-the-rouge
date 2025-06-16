@@ -2,6 +2,8 @@ extends CharacterBrain
 
 class_name PlayerBrain
 
+var regeneration_timer: int = 0
+
 func ready() -> void:
 	game.fov.update_fov(entity.coords)
 	update_info()
@@ -14,6 +16,7 @@ func interact(delta: Vector2i) -> void:
 		other.attack_entity(entity.attack, entity)
 	elif game.map.get_cell_atlas_coords(entity.coords + delta) == Vector2i(0, 2):
 		game.map.make_tile(entity.coords + delta, Vector2i(1, 2))
+		game.update_pathfinder()
 	elif game.map.get_cell_atlas_coords(entity.coords + delta) == Vector2i(1, 3):
 		game.level += 1
 		game.make_level()
@@ -43,10 +46,19 @@ func input(event: InputEvent) -> void:
 		interact(Vector2i(1, -1))
 
 func update_info() -> void:
-	game.ui.update_info(entity.max_health, entity.health, 0)
+	game.ui.update_info(entity.max_health, entity.health, entity.money)
+
+func next_turn() -> void:
+	if entity.health < entity.max_health:
+		if regeneration_timer == 0:
+			regeneration_timer = 5
+		else:
+			regeneration_timer -= 1
+		if regeneration_timer == 1:
+			entity.health += 1
 
 func on_turn_completed() -> void:
 	update_info()
 
 func on_health_below_zero() -> void:
-	game.end_game()
+	game.game_over()
